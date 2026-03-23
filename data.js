@@ -168,7 +168,7 @@ const PEO_DATA = {
     season: "2026.3.23 ~ 2026.4.5",
     goal: 15,
     finePerKm: 3000,
-    totalParticipants: 24,
+    totalParticipants: 26,
     completions: 0,
     totalKm: 1,
     completionRate: 0,
@@ -186,7 +186,8 @@ const PEO_DATA = {
         { id: "연", rank: 6, lv: 11, km: 0, remain: 15.0, fine: 45000, msg: "Let's roll!", remark: "" }
       ]}},
       { num: 4, members: [
-        { id: "뽀기아빠", rank: 7, lv: 10, km: 0, remain: 15.0, fine: 45000, msg: "Let's roll!", remark: "" }
+        { id: "뽀기아빠", rank: 7, lv: 10, km: 0, remain: 15.0, fine: 45000, msg: "Let's roll!", remark: "" },
+        { id: "찬우", rank: 8, lv: 2, km: 0, remain: 15.0, fine: 45000, msg: "Let's roll!", remark: "" }
       ]}},
       { num: 5, members: [
         { id: "재형", rank: 10, lv: 10, km: 0, remain: 15.0, fine: 45000, msg: "Let's roll!", remark: "" },
