@@ -87,7 +87,7 @@
     const ctx = document.getElementById('radar-chart').getContext('2d');
     
     // Use 3-month comprehensive scores
-    const q = QUARTERLY_DATA.scores[m.id] || { speed: 0, endurance: 0, consistency: 0, cadence: 0, total: 0 };
+    const q = QUARTERLY_DATA.scores[m.id] || { speed: 0, endurance: 0, consistency: 0, cadence: 0, longrun: 0 };
     const label = '3개월 종합';
     
     const values = [
@@ -95,7 +95,7 @@
       q.endurance,
       q.consistency,
       q.cadence,
-      q.total
+      q.longrun
     ];
 
     const seasonLabel = document.querySelector('[data-testid="text-season-label"]');
@@ -111,7 +111,7 @@
     radarChart = new Chart(ctx, {
       type: 'radar',
       data: {
-        labels: ['스피드', '지구력', '꾸준함', '케이던스', '종합'],
+        labels: ['스피드', '지구력', '꾸준함', '케이던스', '롱런'],
         datasets: [{
           label: label,
           data: values,
@@ -190,11 +190,12 @@
 
   // ===== SCORE BREAKDOWN (3-month comprehensive) =====
   function updateScores(m) {
-    const q = QUARTERLY_DATA.scores[m.id] || { speed: 0, endurance: 0, consistency: 0, cadence: 0, total: 0 };
+    const q = QUARTERLY_DATA.scores[m.id] || { speed: 0, endurance: 0, consistency: 0, cadence: 0, longrun: 0, total: 0 };
 
     setScoreBar('total-score', q.total);
     setScoreBar('speed-score', q.speed);
     setScoreBar('endurance-score', q.endurance);
+    setScoreBar('longrun-score', q.longrun);
     setScoreBar('consistency-score', q.consistency);
     setScoreBar('cadence-score', q.cadence);
   }

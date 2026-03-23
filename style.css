@@ -385,6 +385,7 @@ main {
 .score-bar-fill.speed { background: var(--speed-color); }
 .score-bar-fill.endurance { background: var(--endurance-color); }
 .score-bar-fill.consistency { background: var(--consistency-color); }
+.score-bar-fill.longrun { background: var(--cadence-color); }
 .score-bar-fill.cadence { background: var(--cadence-color); }
 
 .score-number {
