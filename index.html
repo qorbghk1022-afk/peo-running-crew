@@ -88,9 +88,13 @@
           <div class="radar-season-label" data-testid="text-season-label"></div>
         </div>
 
-        <!-- Current Season Stats -->
+        <!-- Season Stats with Navigation -->
         <div class="section-card stats-card">
-          <h3 class="section-title">현재 시즌 스탯</h3>
+          <div class="season-nav">
+            <button class="season-nav-btn" id="season-prev" data-testid="btn-season-prev">&lt;</button>
+            <h3 class="section-title" id="season-title" data-testid="text-season-title">현재 시즌 스탯</h3>
+            <button class="season-nav-btn" id="season-next" data-testid="btn-season-next">&gt;</button>
+          </div>
           <div class="season-period" data-testid="text-current-period"></div>
           <div class="stats-grid">
             <div class="stat-item">

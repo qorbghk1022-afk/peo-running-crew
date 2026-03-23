@@ -8,6 +8,7 @@
   let calYear = 2026;
   let calMonth = 2; // 0-indexed: 2 = March
   let calMemberId = null;
+  let seasonIndex = 0; // 0 = current, 1 = previous, 2+ = older seasons
 
   // ===== INITIALIZATION =====
   function init() {
@@ -23,6 +24,23 @@
 
     select.addEventListener('change', (e) => {
       selectMember(e.target.value);
+    });
+
+    // Season navigation
+    document.getElementById('season-prev').addEventListener('click', () => {
+      if (currentMember) {
+        const maxSeasons = Math.floor((PEO_DATA.members[0] ? getSeasonCount() : 1)) - 1;
+        if (seasonIndex < maxSeasons) {
+          seasonIndex++;
+          updateStats(currentMember);
+        }
+      }
+    });
+    document.getElementById('season-next').addEventListener('click', () => {
+      if (currentMember && seasonIndex > 0) {
+        seasonIndex--;
+        updateStats(currentMember);
+      }
     });
 
     // Initialize Challenge Board
@@ -59,12 +77,33 @@
     const member = PEO_DATA.members.find(m => m.id === memberId);
     if (!member) return;
     currentMember = member;
+    seasonIndex = 0; // Reset to current season
 
     updateLVCard(member);
     updateRadarChart(member);
     updateStats(member);
     updateScores(member);
     updateComparison(member);
+  }
+
+  // Navigate to member from other tabs
+  function goToMember(memberId) {
+    const select = document.getElementById('member-select');
+    select.value = memberId;
+    selectMember(memberId);
+    // Switch to 마이페이지 tab
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-mypage').classList.add('active');
+    document.querySelector('[data-tab="mypage"]').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Get total number of seasons available in data
+  function getSeasonCount() {
+    // Count how many 26-row blocks exist in 회원2주능력치
+    // We have current + previous in data.js = 2 seasons
+    return 2;
   }
 
   // ===== LV CARD =====
@@ -174,13 +213,26 @@
     });
   }
 
-  // ===== CURRENT SEASON STATS =====
+  // ===== SEASON STATS WITH NAVIGATION =====
   function updateStats(m) {
-    const s = PEO_DATA.season.current;
+    const seasons = [
+      { label: '현재 시즌', period: PEO_DATA.season.current, data: m.current },
+      { label: '이전 시즌', period: PEO_DATA.season.previous, data: m.previous }
+    ];
+    
+    const idx = Math.min(seasonIndex, seasons.length - 1);
+    const season = seasons[idx];
+    
+    // Update title and period
+    document.getElementById('season-title').textContent = season.label + ' 스탯';
     document.querySelector('[data-testid="text-current-period"]').textContent = 
-      `${s.start} ~ ${s.end}`;
+      `${season.period.start} ~ ${season.period.end}`;
+    
+    // Update nav button states
+    document.getElementById('season-prev').style.visibility = idx < seasons.length - 1 ? 'visible' : 'hidden';
+    document.getElementById('season-next').style.visibility = idx > 0 ? 'visible' : 'hidden';
 
-    const c = m.current;
+    const c = season.data;
     document.querySelector('[data-testid="text-stat-distance"]').textContent = c.distance.toFixed(1);
     document.querySelector('[data-testid="text-stat-longest"]').textContent = c.longest.toFixed(1);
     document.querySelector('[data-testid="text-stat-pace"]').textContent = c.pace === "00:00" ? "-" : c.pace;
@@ -449,7 +501,7 @@
       
       html += `<div class="rank-info">`;
       html += `<div class="rank-name-row">`;
-      html += `<span class="rank-name">${m.name}</span>`;
+      html += `<span class="rank-name clickable" onclick="goToMember('${m.id}')" data-testid="link-rank-${m.id}">${m.name}</span>`;
       html += `<span class="rank-lv">LV${m.lv}</span>`;
       html += `</div>`;
       
@@ -629,6 +681,18 @@
   }
 
   // Global function for onclick
+  // Expose goToMember globally for onclick
+  window.goToMember = function(memberId) {
+    const select = document.getElementById('member-select');
+    select.value = memberId;
+    selectMember(memberId);
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-mypage').classList.add('active');
+    document.querySelector('[data-tab="mypage"]').classList.add('active');
+    window.scrollTo(0, 0);
+  };
+
   window._openCalDay = function(dateStr) {
     const memberRuns = getMemberRuns(calMemberId);
     const dayRuns = memberRuns.filter(r => r.date === dateStr);
