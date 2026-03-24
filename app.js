@@ -287,8 +287,8 @@
               lineWidth: 0.8
             },
             pointLabels: {
-              font: { size: 9, weight: '700', family: "'Noto Sans KR', sans-serif" },
-              color: '#333'
+              font: { size: 9, weight: '500', family: "'Noto Sans KR', sans-serif" },
+              color: '#555'
             }
           }
         }
