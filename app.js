@@ -106,96 +106,19 @@
     return 2;
   }
 
-  // ===== LV CARD (Character Card) =====
+  // ===== LV CARD =====
   function updateLVCard(m) {
-    // Top bar
     document.querySelector('[data-testid="text-lv"] .lv-number').textContent = `LV ${m.lv}`;
     document.querySelector('[data-testid="text-member-name"]').textContent = m.name;
+    document.querySelector('[data-testid="text-realname"]').textContent = m.realname;
+    document.querySelector('[data-testid="text-exp"]').textContent = `${m.totalExp.toLocaleString()} EXP`;
     
-    // LV gauge (linear bar + %)
-    const gaugeFill = document.getElementById('lv-gauge-fill');
-    const gaugePct = document.getElementById('lv-gauge-pct');
-    if (gaugeFill) gaugeFill.style.width = `${m.expPct}%`;
-    if (gaugePct) gaugePct.textContent = `${m.expPct}%`;
-
-    // Bib name overlay on egg
-    const bibName = document.querySelector('[data-testid="text-bib-name"]');
-    if (bibName) bibName.textContent = m.name;
-
-    // Hidden backward compat elements
-    const realnameEl = document.querySelector('[data-testid="text-realname"]');
-    if (realnameEl) realnameEl.textContent = m.realname;
-    const expEl = document.querySelector('[data-testid="text-exp"]');
-    if (expEl) expEl.textContent = `${m.totalExp.toLocaleString()} EXP`;
-    const expBar = document.getElementById('exp-bar');
-    if (expBar) expBar.style.width = `${m.expPct}%`;
-    const expPctEl = document.querySelector('[data-testid="text-exp-percent"]');
-    if (expPctEl) expPctEl.textContent = `${m.expPct}%`;
-    const distEl = document.querySelector('[data-testid="text-total-dist"]');
-    if (distEl) distEl.textContent = `${m.totalDist.toFixed(1)} km`;
-    const daysEl = document.querySelector('[data-testid="text-total-days"]');
-    if (daysEl) daysEl.textContent = `${m.totalDays}일`;
-
-    // Right panel stats
-    const cardDist = document.querySelector('[data-testid="text-card-dist"]');
-    const cardDays = document.querySelector('[data-testid="text-card-days"]');
-    const cardExp = document.querySelector('[data-testid="text-card-exp"]');
-    if (cardDist) cardDist.textContent = `${m.totalDist.toFixed(1)}km`;
-    if (cardDays) cardDays.textContent = `${m.totalDays}일`;
-    if (cardExp) cardExp.textContent = m.totalExp.toLocaleString();
-
-    // Role/title
-    const q = QUARTERLY_DATA.scores[m.id];
-    const totalEl = document.querySelector('[data-testid="text-char-total"]');
-    const roleEl = document.querySelector('[data-testid="text-char-role"]');
-    const titleEl = document.querySelector('[data-testid="text-char-title"]');
-
-    if (q) {
-      if (totalEl) totalEl.textContent = q.total;
-      const topStat = getTopStat(q);
-      if (roleEl) roleEl.textContent = getRoleTitle(topStat, q);
-      if (titleEl) titleEl.textContent = getRoleSubtitle(topStat);
-    } else {
-      if (totalEl) totalEl.textContent = '0';
-      if (roleEl) roleEl.textContent = 'PEO의 크루원';
-      if (titleEl) titleEl.textContent = '';
-    }
-  }
-
-  function getTopStat(q) {
-    const stats = [
-      { key: 'speed', val: q.speed },
-      { key: 'endurance', val: q.endurance },
-      { key: 'consistency', val: q.consistency },
-      { key: 'cadence', val: q.cadence },
-      { key: 'longrun', val: q.longrun }
-    ];
-    stats.sort((a, b) => b.val - a.val);
-    return stats[0].key;
-  }
-
-  function getRoleTitle(topStat, q) {
-    if (q.total >= 85) return 'PEO의 에이스';
-    if (q.total >= 75) return 'PEO의 핵심 러너';
-    const titles = {
-      speed: 'PEO의 스피드스터',
-      endurance: 'PEO의 마라토너',
-      consistency: 'PEO의 꾸준러',
-      cadence: 'PEO의 비트러너',
-      longrun: 'PEO의 롱런왕'
-    };
-    return titles[topStat] || 'PEO의 크루원';
-  }
-
-  function getRoleSubtitle(topStat) {
-    const subs = {
-      speed: '빠른 발걸음의 소유자',
-      endurance: '끝까지 달리는 자',
-      consistency: '매일이 러닝데이',
-      cadence: '리듬감의 달인',
-      longrun: '긴 거리의 정복자'
-    };
-    return subs[topStat] || '';
+    const bar = document.getElementById('exp-bar');
+    bar.style.width = `${m.expPct}%`;
+    document.querySelector('[data-testid="text-exp-percent"]').textContent = `${m.expPct}%`;
+    
+    document.querySelector('[data-testid="text-total-dist"]').textContent = `${m.totalDist.toFixed(1)} km`;
+    document.querySelector('[data-testid="text-total-days"]').textContent = `${m.totalDays}일`;
   }
 
   // ===== RADAR CHART =====
@@ -217,12 +140,7 @@
     const seasonLabel = document.querySelector('[data-testid="text-season-label"]');
     seasonLabel.textContent = `3개월 종합 (${QUARTERLY_DATA.period.start} ~ ${QUARTERLY_DATA.period.end})`;
 
-    // Update labels with scores
-    const labelNames = ['스피드', '지구력', '꾸준함', '케이던스', '롱런'];
-    const labelsWithScores = labelNames.map((name, i) => name + '\n' + values[i]);
-
     if (radarChart) {
-      radarChart.data.labels = labelsWithScores;
       radarChart.data.datasets[0].data = values;
       radarChart.data.datasets[0].label = label;
       radarChart.update('none');
@@ -232,18 +150,18 @@
     radarChart = new Chart(ctx, {
       type: 'radar',
       data: {
-        labels: labelsWithScores,
+        labels: ['스피드', '지구력', '꾸준함', '케이던스', '롱런'],
         datasets: [{
           label: label,
           data: values,
-          backgroundColor: 'rgba(217, 38, 16, 0.18)',
+          backgroundColor: 'rgba(217, 38, 16, 0.12)',
           borderColor: '#D92610',
           borderWidth: 2,
           pointBackgroundColor: '#D92610',
           pointBorderColor: '#FFFFFF',
-          pointBorderWidth: 1.5,
-          pointRadius: 3,
-          pointHoverRadius: 5,
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7,
         }]
       },
       options: {
@@ -255,10 +173,10 @@
             backgroundColor: '#000',
             titleColor: '#fff',
             bodyColor: '#fff',
-            titleFont: { family: "'Noto Sans KR', sans-serif", size: 10, weight: '600' },
-            bodyFont: { family: "'Noto Sans KR', sans-serif", size: 10 },
-            padding: 6,
-            cornerRadius: 6,
+            titleFont: { family: "'Noto Sans KR', sans-serif", size: 12, weight: '600' },
+            bodyFont: { family: "'Noto Sans KR', sans-serif", size: 12 },
+            padding: 10,
+            cornerRadius: 8,
             callbacks: {
               label: function(ctx) {
                 return `${ctx.label}: ${ctx.raw}점`;
@@ -272,23 +190,22 @@
             min: 0,
             max: 100,
             ticks: {
-              stepSize: 25,
-              font: { size: 7, family: "'Noto Sans KR', sans-serif" },
+              stepSize: 20,
+              font: { size: 10, family: "'Noto Sans KR', sans-serif" },
               color: '#CCC',
-              backdropColor: 'transparent',
-              display: false
+              backdropColor: 'transparent'
             },
             grid: {
-              color: '#E0E0E0',
-              lineWidth: 0.8
+              color: '#E8E8E8',
+              lineWidth: 1
             },
             angleLines: {
               color: '#E0E0E0',
-              lineWidth: 0.8
+              lineWidth: 1
             },
             pointLabels: {
-              font: { size: 9, weight: '500', family: "'Noto Sans KR', sans-serif" },
-              color: '#555'
+              font: { size: 12, weight: '600', family: "'Noto Sans KR', sans-serif" },
+              color: '#333'
             }
           }
         }
@@ -574,7 +491,7 @@
       const medals = ['', '🥇', '🥈', '🥉'];
       const medal = medals[rank] || '';
 
-      html += `<div class="${itemClass}" data-testid="rank-item-${rank}" onclick="goToMember('${m.id}')" style="cursor:pointer">`;
+      html += `<div class="${itemClass}" data-testid="rank-item-${rank}">`;
       
       if (medal) {
         html += `<span class="rank-medal">${medal}</span>`;
@@ -584,7 +501,7 @@
       
       html += `<div class="rank-info">`;
       html += `<div class="rank-name-row">`;
-      html += `<span class="rank-name" data-testid="link-rank-${m.id}">${m.name}</span>`;
+      html += `<span class="rank-name clickable" onclick="goToMember('${m.id}')" data-testid="link-rank-${m.id}">${m.name}</span>`;
       html += `<span class="rank-lv">LV${m.lv}</span>`;
       html += `</div>`;
       

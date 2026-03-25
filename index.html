@@ -49,67 +49,44 @@
           </div>
         </div>
 
-        <!-- CHARACTER CARD -->
-        <div class="char-card">
-          <!-- Top bar: LV | Nickname | Red accent bar -->
-          <div class="char-card-topbar">
-            <div class="char-topbar-lv" data-testid="text-lv">
+        <!-- LV & EXP -->
+        <div class="section-card lv-card">
+          <div class="lv-top">
+            <div class="lv-badge" data-testid="text-lv">
               <span class="lv-number">LV 0</span>
             </div>
-            <div class="char-topbar-name" data-testid="text-member-name">—</div>
-            <div class="char-topbar-gauge">
-              <div class="char-gauge-bar"><div class="char-gauge-fill" id="lv-gauge-fill" style="width:0%"></div></div>
-              <span class="char-gauge-pct" id="lv-gauge-pct">0%</span>
+            <div class="lv-info">
+              <span class="member-name" data-testid="text-member-name">—</span>
+              <span class="member-realname" data-testid="text-realname"></span>
             </div>
+            <div class="exp-total" data-testid="text-exp">0 EXP</div>
           </div>
-
-          <!-- Center: Character image area -->
-          <div class="char-card-center">
-            <div class="char-center-bg">
-              <div class="char-ground-shadow"></div>
-              <div class="char-egg-wrapper">
-                <img src="egg_star_clean.png" alt="Character" class="char-egg-img">
-                <div class="char-bib-name" data-testid="text-bib-name">—</div>
-              </div>
+          <div class="exp-bar-container">
+            <div class="exp-bar-track">
+              <div class="exp-bar-fill" id="exp-bar" data-testid="progress-exp"></div>
             </div>
+            <span class="exp-percent" data-testid="text-exp-percent">0%</span>
           </div>
-
-          <!-- Bottom: Radar (left) + Stats (right) -->
-          <div class="char-card-bottom">
-            <div class="char-bottom-radar">
-              <div class="char-radar-wrap">
-                <canvas id="radar-chart" data-testid="chart-radar"></canvas>
-              </div>
+          <div class="cumulative-stats">
+            <div class="cum-stat">
+              <span class="cum-label">누적거리</span>
+              <span class="cum-value" data-testid="text-total-dist">0 km</span>
             </div>
-            <div class="char-bottom-stats">
-              <div class="char-stat-info">
-                <div class="char-stat-row">
-                  <span class="stat-val" data-testid="text-card-dist">0km</span>
-                  <span class="stat-label">누적거리</span>
-                </div>
-                <div class="char-stat-row">
-                  <span class="stat-val" data-testid="text-card-days">0일</span>
-                  <span class="stat-label">러닝일수</span>
-                </div>
-              </div>
-              <div class="char-stat-total">
-                <span class="char-stat-total-label">종합</span>
-                <span class="char-stat-total-value" data-testid="text-char-total">0</span>
-              </div>
+            <div class="cum-stat">
+              <span class="cum-label">누적일수</span>
+              <span class="cum-value" data-testid="text-total-days">0일</span>
             </div>
           </div>
         </div>
 
-        <!-- Hidden elements for backward compatibility -->
-        <span class="member-realname" data-testid="text-realname" style="display:none"></span>
-        <span data-testid="text-exp" style="display:none">0 EXP</span>
-        <div style="display:none">
-          <div class="exp-bar-fill" id="exp-bar" data-testid="progress-exp"></div>
+        <!-- Radar Chart -->
+        <div class="section-card radar-card">
+          <h3 class="section-title">능력치 레이더</h3>
+          <div class="radar-wrapper">
+            <canvas id="radar-chart" data-testid="chart-radar"></canvas>
+          </div>
+          <div class="radar-season-label" data-testid="text-season-label"></div>
         </div>
-        <span data-testid="text-exp-percent" style="display:none">0%</span>
-        <span data-testid="text-total-dist" style="display:none">0 km</span>
-        <span data-testid="text-total-days" style="display:none">0일</span>
-        <div data-testid="text-season-label" style="display:none"></div>
 
         <!-- Season Stats with Navigation -->
         <div class="section-card stats-card">
