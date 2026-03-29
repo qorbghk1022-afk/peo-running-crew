@@ -315,6 +315,19 @@
   // TAB 2: CHALLENGE BOARD
   // =======================================
   function initChallengeBoard() {
+    // Update challenge header stats from data
+    const ch = PEO_DATA.challenge;
+    const elParticipants = document.querySelector('[data-testid="text-participants"]');
+    const elCompletions = document.querySelector('[data-testid="text-completions"]');
+    const elCompletionRate = document.querySelector('[data-testid="text-completion-rate"]');
+    const elTotalKm = document.querySelector('[data-testid="text-total-km"]');
+    const elSeason = document.querySelector('[data-testid="text-challenge-season"]');
+    if (elParticipants) elParticipants.textContent = ch.totalParticipants;
+    if (elCompletions) elCompletions.textContent = ch.completions;
+    if (elCompletionRate) elCompletionRate.textContent = ch.completionRate + '%';
+    if (elTotalKm) elTotalKm.textContent = ch.totalKm + 'km';
+    if (elSeason) elSeason.textContent = ch.season;
+
     renderTeamView();
     renderIndividualView();
     setupViewToggle();

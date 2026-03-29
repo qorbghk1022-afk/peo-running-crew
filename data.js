@@ -171,7 +171,7 @@ const PEO_DATA = {
     totalParticipants: 24,
     completions: 1,
     totalKm: 113.0,
-    completionRate: 0.0,
+    completionRate: 4.2,
     teams: [
       { num: 1, members: [
         { id: "JM", rank: 1, lv: 13, km: 12.0, remain: 4.8, fine: 15000, msg: "move!!", remark: "" },
